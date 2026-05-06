@@ -46,4 +46,9 @@ public class Account {
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
     }
+
+    @Override
+    public String toString() {
+        return accountNumber + " | " + accountType + " | " + balance;
+    }
 }
