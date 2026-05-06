@@ -76,6 +76,7 @@ public class Main {
     }
 
     private static void withdraw(Scanner sc) {
+
     }
 
     private static void transfer(Scanner sc) {
