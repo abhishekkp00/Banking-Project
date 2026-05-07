@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TransferQueue;
 import java.util.stream.Collectors;
 
 public class BankServiceimpl implements BankService {
@@ -60,6 +59,27 @@ public class BankServiceimpl implements BankService {
         Transaction transaction = new Transaction(account.getAccountNumber(),
                 amount, UUID.randomUUID().toString(), note, LocalDateTime.now(), Type.WITHDRAW);
         transactionRepository.add(transaction);
+    }
+
+    @Override
+    public void transfer(String fromAcc, String toAcc, Double amount, String note
+    ) {
+        if(fromAcc.equals(toAcc))
+            throw new RuntimeException("Can not Transfer to your account.");
+        Account from = accountRepository.findByNumber(fromAcc)
+                .orElseThrow(() -> new RuntimeException("Account Not Found: "+ fromAcc));
+        Account to = accountRepository.findByNumber(toAcc)
+                .orElseThrow(() -> new RuntimeException("Account Not Found: "+ toAcc));
+        if(from.getBalance().compareTo(amount) < 0)
+            throw new RuntimeException("Insufficient Balance.");
+        from.setBalance(from.getBalance() - amount);
+        to.setBalance(to.getBalance() + amount);
+
+        transactionRepository.add(new Transaction(from.getAccountNumber(),
+                amount, UUID.randomUUID().toString(), note, LocalDateTime.now(), Type.TRANSFER_OUT));
+
+        transactionRepository.add(new Transaction(to.getAccountNumber(),
+                amount, UUID.randomUUID().toString(), note, LocalDateTime.now(), Type.TRANSFER_IN));
     }
 
     private String getAccountNumber() {
