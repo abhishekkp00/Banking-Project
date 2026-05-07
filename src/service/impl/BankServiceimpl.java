@@ -50,6 +50,18 @@ public class BankServiceimpl implements BankService {
         transactionRepository.add(transaction);
     }
 
+    @Override
+    public void Withdraw(String accountNumber, Double amount, String note) {
+        Account account = accountRepository.findByNumber(accountNumber)
+                .orElseThrow(() -> new RuntimeException("Account Not Found: "+ accountNumber));
+        if(account.getBalance().compareTo(amount) < 0)
+            throw new RuntimeException("Insufficient Balance.");
+        account.setBalance(account.getBalance() - amount);
+        Transaction transaction = new Transaction(account.getAccountNumber(),
+                amount, UUID.randomUUID().toString(), note, LocalDateTime.now(), Type.WITHDRAW);
+        transactionRepository.add(transaction);
+    }
+
     private String getAccountNumber() {
         int size = accountRepository.findAll().size() + 1;
         //6-digit account number trailing
