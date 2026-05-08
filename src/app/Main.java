@@ -36,9 +36,9 @@ public class Main {
                 case "2" -> deposit(sc, bankservice);
                 case "3" -> withdraw(sc,bankservice);
                 case "4" -> transfer(sc, bankservice);
-                case "5" -> statement(sc);
+                case "5" -> statement(sc, bankservice);
                 case "6" -> listAccounts(sc, bankservice);
-                case "7" -> searchAccount(sc);                
+                case "7" -> searchAccount(sc, bankservice);
                 case "0" -> running = false;
             }
         }
@@ -60,7 +60,6 @@ public class Main {
             bankService.deposit(accountNumber, initial, "INITIAL DEPOSIT");
         }
         System.out.println("Account Opened: " + accountNumber);
-
     }
 
     private static void deposit(Scanner sc, BankService bankService) {
@@ -70,9 +69,6 @@ public class Main {
         Double amount = Double.valueOf(sc.nextLine().trim());
         bankService.deposit(accountNumber, amount, "Deposit");
         System.out.println("Deposited");
-
-
-
     }
 
     private static void withdraw(Scanner sc, BankService bankService) {
@@ -96,16 +92,26 @@ public class Main {
         System.out.println("Withdrawn");
     }
 
-    private static void statement(Scanner sc) {
+    private static void statement(Scanner sc, BankService bankService) {
+        System.out.println("Account Number: ");
+        String account = sc.nextLine().trim();
+        bankService.getStatement(account).forEach(t -> {
+            System.out.println(t.getTimestamp() + " | " + t.getType() + " | " + t.getAmount() + " | " + t.getNote());
+        });
+
     }
 
     private static void listAccounts(Scanner sc, BankService bankService) {
         bankService.listAccounts().forEach(a ->{
             System.out.println(a.getAccountNumber() + " | " + a.getAccountType() + " | " + a.getBalance());
         });
-
     }
 
-    private static void searchAccount(Scanner sc) {
+    private static void searchAccount(Scanner sc,BankService bankService) {
+        System.out.println("Customer name contains: ");
+        String q = sc.nextLine().trim();
+        bankService.searchAccountsByCustomerName(q).forEach(account ->
+                System.out.println(account.getAccountNumber() + " | " + account.getAccountType() + " | " + account.getBalance())
+        );
     }
 }

@@ -1,6 +1,7 @@
 package repository;
 
 import domain.Account;
+import domain.Customer;
 
 import java.util.*;
 
@@ -18,5 +19,14 @@ public class AccountRepository {
 
     public Optional<Account> findByNumber(String accountNumber) {
         return Optional.ofNullable(accountsByNumber.get(accountNumber));
+    }
+
+    public List<Account> findByCustomerId(String CustomerId) {
+        List<Account> result = new ArrayList<>();
+        for (Account a: accountsByNumber.values()){
+            if(a.getCustomerId().equals(CustomerId))
+                result.add(a);
+        }
+        return result;
     }
 }
