@@ -8,9 +8,8 @@ import java.util.*;
 public class AccountRepository {
     private final Map<String, Account> accountsByNumber = new HashMap<>();
 
-    public void save(Account account){
+    public void save(Account account) {
         accountsByNumber.put(account.getAccountNumber(), account);
-
     }
 
     public List<Account> findAll() {
@@ -21,10 +20,10 @@ public class AccountRepository {
         return Optional.ofNullable(accountsByNumber.get(accountNumber));
     }
 
-    public List<Account> findByCustomerId(String CustomerId) {
+    public List<Account> findByCustomerId(String customerId) {
         List<Account> result = new ArrayList<>();
-        for (Account a: accountsByNumber.values()){
-            if(a.getCustomerId().equals(CustomerId))
+        for (Account a : accountsByNumber.values()){
+            if (a.getCustomerId().equals(customerId))
                 result.add(a);
         }
         return result;

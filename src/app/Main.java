@@ -1,117 +1,112 @@
 package app;
 
 import service.BankService;
-import service.impl.BankServiceimpl;
+import service.impl.BankServiceImpl;
 
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        BankService bankservice = new BankServiceimpl();
+        Scanner scanner = new Scanner(System.in);
+        BankService bankService = new BankServiceImpl();
         boolean running = true;
-        System.out.println("--------------------------------------------------");
-        System.out.println("Welcome to the Application");
-        System.out.println("-------------------------------------------------");
-
-
-        while(running) {
+        System.out.println("Welcome to Console Bank");
+        while (running) {
             System.out.println("""
-                    1) Open Account
-                    2) Deposit
-                    3) Withdraw
-                    4) Transfer
-                    5) Account Statement
-                    6) List Account
-                    7) Search Accounts by Customer Name
-                    0) Exit
-                    """);
-            System.out.println("----------------------------------------");
-            System.out.println("Enter your choice: ");
-            String choice = sc.nextLine().trim();
-            System.out.println("You have selected: " + choice);
+                1) Open Account
+                2) Deposit
+                3) Withdraw
+                4) Transfer
+                5) Account Statement
+                6) List Accounts
+                7) Search Accounts by Customer Name
+                0) Exit
+            """);
+            System.out.print("CHOOSE: ");
+            String choice = scanner.nextLine().trim();
+            System.out.println("CHOICE: " + choice);
 
-            switch(choice) {
-                case "1" -> openAccount(sc, bankservice);
-                case "2" -> deposit(sc, bankservice);
-                case "3" -> withdraw(sc,bankservice);
-                case "4" -> transfer(sc, bankservice);
-                case "5" -> statement(sc, bankservice);
-                case "6" -> listAccounts(sc, bankservice);
-                case "7" -> searchAccount(sc, bankservice);
+            switch (choice) {
+                case "1" -> openAccount(scanner, bankService);
+                case "2" -> deposit(scanner, bankService);
+                case "3" -> withdraw(scanner, bankService);
+                case "4" -> transfer(scanner, bankService);
+                case "5" -> statement(scanner, bankService);
+                case "6" -> listAccounts(scanner, bankService);
+                case "7" -> searchAccounts(scanner, bankService);
                 case "0" -> running = false;
             }
         }
+
+
     }
 
-    private static void openAccount(Scanner sc, BankService bankService) {
-        System.out.println("Customer Name");
-        String name = sc.nextLine().trim();
-        System.out.println("Customer email");
-        String email = sc.nextLine().trim();
-        System.out.println("Account Type (SAVINGS/CURRENT)");
-        String type = sc.nextLine().trim();
-        System.out.println("Initial deosit (optional, blank for 0)");
-        String amountStr = sc.nextLine().trim();
+    private static void openAccount(Scanner scanner, BankService bankService) {
+        System.out.println("Customer name: ");
+        String name = scanner.nextLine().trim();
+        System.out.println("Customer email: ");
+        String email = scanner.nextLine().trim();
+        System.out.println("Account Type (SAVINGS/CURRENT): ");
+        String type = scanner.nextLine().trim();
+        System.out.println("Initial deposit (optional, blank for 0): ");
+        String amountStr = scanner.nextLine().trim();
+        if (amountStr.isBlank()) amountStr = "0";
         Double initial = Double.valueOf(amountStr);
-        bankService.openAccount(name, email, type);
-        String accountNumber = bankService.openAccount(name, email, type);
-        if(initial > 0){
-            bankService.deposit(accountNumber, initial, "INITIAL DEPOSIT");
-        }
-        System.out.println("Account Opened: " + accountNumber);
+        String accountNumber = bankService.openAccount(name,email,type);
+        if (initial > 0)
+            bankService.deposit(accountNumber, initial, "Initial Deposit");
+        System.out.println("Account opened: " + accountNumber);
     }
 
-    private static void deposit(Scanner sc, BankService bankService) {
+    private static void deposit(Scanner scanner, BankService bankService) {
         System.out.println("Account number: ");
-        String accountNumber = sc.nextLine().trim();
+        String accountNumber = scanner.nextLine().trim();
         System.out.println("Amount: ");
-        Double amount = Double.valueOf(sc.nextLine().trim());
+        Double amount = Double.valueOf(scanner.nextLine().trim());
         bankService.deposit(accountNumber, amount, "Deposit");
         System.out.println("Deposited");
     }
 
-    private static void withdraw(Scanner sc, BankService bankService) {
+    private static void withdraw(Scanner scanner, BankService bankService) {
         System.out.println("Account number: ");
-        String accountNumber = sc.nextLine().trim();
+        String accountNumber = scanner.nextLine().trim();
         System.out.println("Amount: ");
-        Double amount = Double.valueOf(sc.nextLine().trim());
-        bankService.Withdraw(accountNumber, amount, "Withdrawn");
+        Double amount = Double.valueOf(scanner.nextLine().trim());
+        bankService.withdraw(accountNumber, amount, "Withdrawal");
         System.out.println("Withdrawn");
-
     }
 
-    private static void transfer(Scanner sc, BankService bankService) {
+    private static void transfer(Scanner scanner, BankService bankService) {
         System.out.println("From Account: ");
-        String from = sc.nextLine().trim();
+        String from = scanner.nextLine().trim();
         System.out.println("To Account: ");
-        String to = sc.nextLine().trim();
-        System.out.println("Amount to Transfer: ");
-        Double amount = Double.valueOf(sc.nextLine().trim());
-        bankService.transfer(from, to, amount, "Transferred Successfully");
-        System.out.println("Withdrawn");
+        String to = scanner.nextLine().trim();
+        System.out.println("Amount: ");
+        Double amount = Double.valueOf(scanner.nextLine().trim());
+        bankService.transfer(from, to, amount, "Transfer");
     }
 
-    private static void statement(Scanner sc, BankService bankService) {
-        System.out.println("Account Number: ");
-        String account = sc.nextLine().trim();
+    private static void statement(Scanner scanner, BankService bankService) {
+        System.out.println("Account number: ");
+        String account = scanner.nextLine().trim();
         bankService.getStatement(account).forEach(t -> {
             System.out.println(t.getTimestamp() + " | " + t.getType() + " | " + t.getAmount() + " | " + t.getNote());
         });
-
     }
 
-    private static void listAccounts(Scanner sc, BankService bankService) {
-        bankService.listAccounts().forEach(a ->{
+    private static void listAccounts(Scanner scanner, BankService bankService) {
+        bankService.listAccounts().forEach(a -> {
             System.out.println(a.getAccountNumber() + " | " + a.getAccountType() + " | " + a.getBalance());
         });
     }
 
-    private static void searchAccount(Scanner sc,BankService bankService) {
+    private static void searchAccounts(Scanner scanner, BankService bankService) {
         System.out.println("Customer name contains: ");
-        String q = sc.nextLine().trim();
+        String q = scanner.nextLine().trim();
         bankService.searchAccountsByCustomerName(q).forEach(account ->
                 System.out.println(account.getAccountNumber() + " | " + account.getAccountType() + " | " + account.getBalance())
         );
     }
+
+
 }

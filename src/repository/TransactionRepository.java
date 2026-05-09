@@ -13,8 +13,7 @@ public class TransactionRepository {
         list.add(transaction);
     }
 
-
     public List<Transaction> findByAccount(String account) {
-        return new ArrayList<>(txByAccount.getOrDefault((account), Collections.emptyList()));
+        return new ArrayList<>(txByAccount.getOrDefault(account, Collections.emptyList()));
     }
 }

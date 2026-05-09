@@ -6,13 +6,11 @@ public class Account {
     private Double balance;
     private String accountType;
 
-    public Account(String accountNumber, String customerId, Double balance, String accountType) {
+    public Account(String accountNumber, String accountType, Double balance, String customerId) {
         this.accountNumber = accountNumber;
-        this.customerId = customerId;
-        this.balance = balance;
         this.accountType = accountType;
-
-
+        this.balance = balance;
+        this.customerId = customerId;
     }
 
     public String getAccountNumber() {
@@ -45,10 +43,5 @@ public class Account {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
-    }
-
-    @Override
-    public String toString() {
-        return accountNumber + " | " + accountType + " | " + balance;
     }
 }
